@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# This code is related to "DevOps with Saeid" class.
+# All rights reserved, Saeid Bostandoust <ssbostan@linuxmail.org>.
+
+echo "INFO: Welcome to \"DevOps with Saeid\" class (https://b9t.ir/dwsclass)."
+
+which docker-compose &> /dev/null
+
+if [ $? -ne 0 ]; then
+    echo "ERROR: docker-compose is not installed."
+    exit 1
+fi
+
+mkdir -p certs
+
+SYSTEM_IP_ADDRESSES=($(hostname -I))
+
+if [ -f certs/registry.crt ]; then
+    echo "INFO: It seems jenkins-stack is already deployed."
+    exit 0
+fi
+
+sed -i "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESSES[0]}/g" openssl.conf
+
+openssl req -newkey rsa:2048 -nodes -keyout certs/registry.key \
+  -x509 -sha256 -days 3650 -subj "/CN=docker-registry" \
+  -out certs/registry.crt -extensions san -config openssl.conf &> /dev/null
+
+if [ ! -f certs/registry.crt ]; then
+    echo "ERROR: OpenSSL cannot creates registry certificate."
+    exit 1
+else
+    echo "INFO: Docker registry certificate created successfully."
+fi
+
+export JENKINS_DOCKER_REGISTRY_IP=${SYSTEM_IP_ADDRESSES[0]}
+
+docker-compose up -d
+
+echo "INFO: jenkins-stack deployed successfully."
+
+echo "INFO: Deployment preparation may take a while."
+
+cat <<EOL
+Jenkins URL: http://${SYSTEM_IP_ADDRESSES[0]}:8080
+Gitea URL: http://${SYSTEM_IP_ADDRESSES[0]}:3000
+Docker registry URL: https://$JENKINS_DOCKER_REGISTRY_IP
+To use the Docker registry add this code to your Docker "daemon.json" file:
+{
+    "insecure-registries": [
+        "$JENKINS_DOCKER_REGISTRY_IP"
+    ]
+}
+EOL

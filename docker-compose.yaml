@@ -1,0 +1,83 @@
+version: !!str 3
+
+services:
+  jenkins:
+    image: ssbostan/jenkins:lts-slim
+    restart: unless-stopped
+    environment:
+      - "DOCKER_HOST=tcp://docker:2376"
+      - "DOCKER_TLS_VERIFY=1"
+      - "TZ=Asia/Tehran"
+      - "JAVA_OPTS=-Duser.timezone=Asia/Tehran"
+    volumes:
+      - "jenkins_data:/var/jenkins_home"
+      - "docker_certs_client:/var/jenkins_home/.docker"
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    labels:
+      - "app.dws.name=jenkins"
+      - "app.dws.part-of=jenkins"
+      - "app.dws.scope=devops-with-saeid"
+      - "app.dws.created-by=ssbostan"
+
+  registry:
+    image: registry:2
+    restart: unless-stopped
+    environment:
+      - "REGISTRY_FIELDS_ENVIRONMENT=production"
+      - "REGISTRY_HTTP_ADDR=0.0.0.0:443"
+      - "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/registry.crt"
+      - "REGISTRY_HTTP_TLS_KEY=/certs/registry.key"
+    volumes:
+      - "registry_data:/var/lib/registry"
+      - "./certs:/certs"
+    ports:
+      - "443:443"
+    labels:
+      - "app.dws.name=registry"
+      - "app.dws.part-of=jenkins"
+      - "app.dws.scope=devops-with-saeid"
+      - "app.dws.created-by=ssbostan"
+
+  docker:
+    image: docker:dind
+    restart: unless-stopped
+    privileged: true
+    command: ["--insecure-registry", "$JENKINS_DOCKER_REGISTRY_IP"]
+    volumes:
+      - "docker_data:/var/lib/docker"
+      - "docker_certs:/certs"
+      - "docker_certs_client:/certs/client"
+      - "jenkins_data:/var/jenkins_home"
+    expose:
+      - "2376"
+    labels:
+      - "app.dws.name=docker"
+      - "app.dws.part-of=jenkins"
+      - "app.dws.scope=devops-with-saeid"
+      - "app.dws.created-by=ssbostan"
+
+  gitea:
+    image: gitea/gitea:1.14
+    restart: unless-stopped
+    environment:
+      - "TZ=Asia/Tehran"
+    volumes:
+      - "gitea_data:/data"
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    labels:
+      - "app.dws.name=gitea"
+      - "app.dws.part-of=jenkins"
+      - "app.dws.scope=devops-with-saeid"
+      - "app.dws.created-by=ssbostan"
+
+volumes:
+  jenkins_data:
+  registry_data:
+  docker_data:
+  docker_certs:
+  docker_certs_client:
+  gitea_data:
