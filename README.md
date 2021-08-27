@@ -1,5 +1,7 @@
 # jenkins-stack-docker
 
+![Visits Badge](https://badges.pufler.dev/visits/ssbostan/jenkins-stack-docker)
+
 **Docker-compose** version of [jenkins-stack-kubernetes](https://github.com/ssbostan/jenkins-stack-kubernetes).
 
 To view the complete documentation follow [jenkins-stack-kubernetes](https://github.com/ssbostan/jenkins-stack-kubernetes) repository.
