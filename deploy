@@ -21,7 +21,7 @@ if [ -f certs/registry.crt ]; then
     exit 0
 fi
 
-sed -i "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESSES[0]}/g" openssl.conf
+sed -i"" "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESSES[0]}/g" openssl.conf
 
 openssl req -newkey rsa:2048 -nodes -keyout certs/registry.key \
   -x509 -sha256 -days 3650 -subj "/CN=docker-registry" \
