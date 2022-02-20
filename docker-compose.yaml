@@ -74,6 +74,23 @@ services:
       - "app.dws.scope=devops-with-saeid"
       - "app.dws.created-by=ssbostan"
 
+    minio:
+      image: miniio/minio:latest
+      restart: unless-stopped
+      command: ["minio", "server", "/data", "--console-address", ":9001"]
+      environment:
+        - 
+      volumes:
+        - "minio_data:/data"
+      ports:
+        - "9000:9000"
+        - "9001:9001"
+      labels:
+        - "app.dws.name=miniio"
+        - "app.dws.part-of=jenkins"
+        - "app.dws.scope=devops-with-saeid"
+        - "app.dws.created-by=mshahmalaki"
+
 volumes:
   jenkins_data:
   registry_data:
@@ -81,3 +98,4 @@ volumes:
   docker_certs:
   docker_certs_client:
   gitea_data:
+  minio_data:
