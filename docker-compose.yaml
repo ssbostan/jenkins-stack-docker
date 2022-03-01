@@ -67,7 +67,7 @@ services:
       - "gitea_data:/data"
     ports:
       - "3000:3000"
-      - "2222:22"
+      - "2233:22"
     labels:
       - "app.dws.name=gitea"
       - "app.dws.part-of=jenkins"
