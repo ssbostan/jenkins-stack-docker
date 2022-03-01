@@ -44,7 +44,7 @@ services:
     image: docker:dind
     restart: unless-stopped
     privileged: true
-    command: ["--insecure-registry", "$JENKINS_DOCKER_REGISTRY_IP"]
+    command: ["--insecure-registry", "${JENKINS_DOCKER_REGISTRY_IP}"]
     volumes:
       - "docker_data:/var/lib/docker"
       - "docker_certs:/certs"
@@ -63,7 +63,14 @@ services:
     restart: unless-stopped
     environment:
       - "TZ=Asia/Tehran"
+      - "GITEA__SERVER__DOAMIN=${SYSTEM_IP_ADDRESS}"
+      - "GITEA__SERVER__SSH_DOMAIN=${SYSTEM_IP_ADDRESS}"
+      - "GITEA__SERVER__ROOT_URL=http://${SYSTEM_IP_ADDRESS}:3000"
       - "GITEA__SERVER__SSH_PORT=2233"
+      - "GITEA__SERVICE__DISABLE_REGISTRATION=true"
+      - "GITEA__SERVICE__REQUIRE_SIGNIN_VIEW=true"
+      - "GITEA__SERVICE__DEFAULT_ALLOW_CREATE_ORGANIZATION=true"
+      - "GITEA__SERVICE__DEFAULT_ENABLE_TIMETRACKING=true"
     volumes:
       - "gitea_data:/data"
     ports:

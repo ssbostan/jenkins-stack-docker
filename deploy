@@ -13,14 +13,23 @@ fi
 
 mkdir -p certs
 
-SYSTEM_IP_ADDRESSES=($(hostname -I))
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     SYSTEM_IP_ADDRESSES=($(hostname -I))
+                export SYSTEM_IP_ADDRESS=${SYSTEM_IP_ADDRESSES[0]}
+                sed -i"" "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESS}/g" openssl.conf
+                ;;
+    Darwin*)    export SYSTEM_IP_ADDRESS=($(osascript -e "IPv4 address of (system info)"))
+                sed -i '' "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESS}/g" openssl.conf
+                ;;
+    *)          echo "UNKNOWN:${unameOut}"
+                exit 1
+esac
 
 if [ -f certs/registry.crt ]; then
     echo "INFO: It seems jenkins-stack is already deployed."
     exit 0
 fi
-
-sed -i"" "s/subjectAltName=.*/subjectAltName=IP:${SYSTEM_IP_ADDRESSES[0]}/g" openssl.conf
 
 openssl req -newkey rsa:2048 -nodes -keyout certs/registry.key \
   -x509 -sha256 -days 3650 -subj "/CN=docker-registry" \
@@ -33,7 +42,10 @@ else
     echo "INFO: Docker registry certificate created successfully."
 fi
 
-export JENKINS_DOCKER_REGISTRY_IP=${SYSTEM_IP_ADDRESSES[0]}
+export JENKINS_DOCKER_REGISTRY_IP=${SYSTEM_IP_ADDRESS}
+
+echo "SYSTEM_IP_ADDRESS="$SYSTEM_IP_ADDRESS > .env
+echo "JENKINS_DOCKER_REGISTRY_IP="$SYSTEM_IP_ADDRESS >> .env
 
 docker-compose up -d
 
@@ -42,9 +54,9 @@ echo "INFO: jenkins-stack deployed successfully."
 echo "INFO: Deployment preparation may take a while."
 
 cat <<EOL
-Jenkins URL: http://${SYSTEM_IP_ADDRESSES[0]}:8080
-Gitea URL: http://${SYSTEM_IP_ADDRESSES[0]}:3000
-MinIO URL: http://${SYSTEM_IP_ADDRESSES[0]}:9001
+Jenkins URL: http://${SYSTEM_IP_ADDRESS}:8080
+Gitea URL: http://${SYSTEM_IP_ADDRESS}:3000
+MinIO URL: http://${SYSTEM_IP_ADDRESS}:9001
 Docker registry URL: https://$JENKINS_DOCKER_REGISTRY_IP
 To use the Docker registry add this code to your Docker "daemon.json" file:
 {
