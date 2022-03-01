@@ -63,6 +63,7 @@ services:
     restart: unless-stopped
     environment:
       - "TZ=Asia/Tehran"
+      - "GITEA__SERVER__SSH_PORT=2233"
     volumes:
       - "gitea_data:/data"
     ports:
