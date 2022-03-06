@@ -29,7 +29,6 @@ services:
       - "REGISTRY_HTTP_ADDR=0.0.0.0:443"
       - "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/registry.crt"
       - "REGISTRY_HTTP_TLS_KEY=/certs/registry.key"
-      - "REGISTRY_STORAGE_DELETE_ENABLED=true"
     volumes:
       - "registry_data:/var/lib/registry"
       - "./certs:/certs"
@@ -40,6 +39,17 @@ services:
       - "app.dws.part-of=jenkins"
       - "app.dws.scope=devops-with-saeid"
       - "app.dws.created-by=ssbostan"
+  
+  ui:
+    image: joxit/docker-registry-ui:1.5-static
+    ports:
+      - "80:80"
+    environment:
+      - "REGISTRY_TITLE=My Private Docker Registry"
+      - "REGISTRY_URL=https://registry"
+      - "SINGLE_REGISTRY=true"
+    depends_on:
+      - registry
 
   docker:
     image: docker:dind
