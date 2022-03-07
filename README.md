@@ -23,3 +23,11 @@ The stack is tested on Docker 2.10 and Docker-compose 1.26, should works on earl
 ```
 
 ![demo](https://raw.githubusercontent.com/ssbostan/jenkins-stack-docker/master/demo.gif)
+
+### About config docker registry
+Please refer to [this link](https://docs.docker.com/registry/configuration/#list-of-configuration-options)
+
+### Dokcer registry garbage collect
+```
+docker-compose exec registry sh -c "bin/registry garbage-collect /etc/docker/registry/config.yml"
+```
