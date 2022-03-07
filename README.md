@@ -31,3 +31,7 @@ Please refer to [this link](https://docs.docker.com/registry/configuration/#list
 ```
 docker-compose exec registry sh -c "bin/registry garbage-collect /etc/docker/registry/config.yml"
 ```
+
+### Docker registry UI
+for more informations about this web UI refer to [this link](https://github.com/Joxit/docker-registry-ui)
+![preview](https://raw.github.com/Joxit/docker-registry-ui/main/docker-registry-ui.gif "Preview of Docker Registry UI")
