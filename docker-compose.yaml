@@ -25,7 +25,7 @@ services:
     image: registry:2
     restart: unless-stopped
     environment:
-      - "REGISTRY_FIELDS_ENVIRONMENT=production"
+      - "REGISTRY_LOG_FIELDS_ENVIRONMENT=production"
       - "REGISTRY_HTTP_ADDR=0.0.0.0:443"
       - "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/registry.crt"
       - "REGISTRY_HTTP_TLS_KEY=/certs/registry.key"
