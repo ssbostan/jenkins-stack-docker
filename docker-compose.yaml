@@ -32,6 +32,7 @@ services:
     volumes:
       - "registry_data:/var/lib/registry"
       - "./certs:/certs"
+      - "./registry/config.yml:/etc/docker/registry/config.yml"
     ports:
       - "443:443"
     labels:
@@ -48,6 +49,7 @@ services:
       - "REGISTRY_TITLE=My Private Docker Registry"
       - "REGISTRY_URL=https://registry"
       - "SINGLE_REGISTRY=true"
+      - "DELETE_IMAGES=true"
     depends_on:
       - registry
 
