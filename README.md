@@ -23,3 +23,8 @@ The stack is tested on Docker 2.10 and Docker-compose 1.26, should works on earl
 ```
 
 ![demo](https://raw.githubusercontent.com/ssbostan/jenkins-stack-docker/master/demo.gif)
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)
