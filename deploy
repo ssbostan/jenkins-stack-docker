@@ -4,7 +4,7 @@
 
 echo "INFO: Welcome to \"DevOps with Saeid\" class (www.devops-with-saeid.com)."
 
-which docker-compose &> /dev/null
+which docker compose &> /dev/null
 
 if [ $? -ne 0 ]; then
     echo "ERROR: docker-compose is not installed."
@@ -35,7 +35,7 @@ fi
 
 export JENKINS_DOCKER_REGISTRY_IP=${SYSTEM_IP_ADDRESSES[0]}
 
-docker-compose up -d
+docker compose up -d
 
 echo "INFO: jenkins-stack deployed successfully."
 
