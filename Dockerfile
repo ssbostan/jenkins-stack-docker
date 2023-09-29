@@ -12,6 +12,8 @@ RUN jenkins-plugin-cli --plugins \
   pipeline-model-definition \
   antisamy-markup-formatter \
   terraform \
+  kubernetes-credentials \
+  kubernetes-client-api \
   kubernetes \
   kubernetes-cli \
   openshift-client \
