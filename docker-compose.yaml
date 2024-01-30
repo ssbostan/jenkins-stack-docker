@@ -59,7 +59,7 @@ services:
       - "app.dws.created-by=ssbostan"
 
   gitea:
-    image: gitea/gitea:1.14
+    image: gitea/gitea:latest
     restart: unless-stopped
     environment:
       - "TZ=Asia/Tehran"
