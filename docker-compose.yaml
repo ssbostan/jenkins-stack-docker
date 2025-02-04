@@ -63,6 +63,7 @@ services:
     restart: unless-stopped
     environment:
       - "TZ=Asia/Tehran"
+      - "GITEA__webhook__ALLOWED_HOST_LIST=*"
     volumes:
       - "gitea_data:/data"
     ports:
